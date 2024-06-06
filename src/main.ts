@@ -1,6 +1,17 @@
 const alphabet: string = "abcdefghijklmnopqrstuvwxyz";
-
+const guessed: string[] = [];
 const alphabetDiv = document.getElementById("alphabet");
+const wordList = [
+  "Lepra",
+  "Mutschekipsche",
+  "Fructose",
+  "Amalgam",
+  "UlliHoeness",
+  "Papperlapapp",
+  "",
+];
+let word: string;
+let hiddenWord: string;
 
 // iterate over alphabet and create letter buttons
 
@@ -16,27 +27,11 @@ function createLetterButton(letter: string) {
   alphabetDiv?.appendChild(newLetter);
 
   // Add event listener for click that calls 'handleGuess(letter)'
-  newLetter.addEventListener("click", () => handleGuess(letter));
-}
-
-function handleGuess(letter: string) {
-  // Return a disabled button with Bootstrap styling
-  return `<button type="button" class="btn btn-primary" disabled>${letter}</button>`;
+  newLetter.firstChild?.addEventListener("click", () => handleGuess(letter));
 }
 
 // array of possible words
 
-const wordList = [
-  "Lepra",
-  "Mutschekipsche",
-  "Fructose",
-  "Amalgam",
-  "UlliHoeness",
-  "Papperlapapp",
-  "",
-];
-let word: string;
-let hiddenWord: string;
 // function to start game
 function startGame(): void {
   word = wordList[Math.floor(Math.random() * wordList.length)];
@@ -52,12 +47,39 @@ function encryptWord() {
   hiddenWord = word
     .split("")
     .map((letter) => {
-      return "_";
+      console.log(letter, word, guessed);
+      return guessed.includes(letter.toLowerCase()) ? letter : "_";
     })
     .join(" ");
   wordDiv!.innerHTML = `${hiddenWord}`;
   wordDiv!.style.color = "white";
+
+  setTimeout(() => {
+    if (!hiddenWord.includes("_")) {
+      alert("You Won!");
+    }
+  }, 1000);
 }
+
 // function handleGuess disable button after click
+
+function handleGuess(letter: string) {
+  // Return a disabled button with Bootstrap styling
+  console.log(letter);
+  // return `<button type="button" class="btn btn-primary" disabled>${letter}</button>`;
+  // disable letters that we already guessed
+  const letterButton = document.getElementById(letter) as HTMLDivElement;
+  letterButton?.classList.add("disabled");
+  letterButton.disabled = true;
+
+  // keep track of all the letters we already guessed
+  guessed.push(letter);
+  // check if the letter is in the answer
+  if (word.toLowerCase().includes(letter)) {
+    encryptWord();
+  } else {
+    console.log("wrong");
+  }
+}
 
 startGame();
