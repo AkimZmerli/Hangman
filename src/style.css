@@ -1,0 +1,14 @@
+body {
+  background-color: black !important;
+}
+
+#alphabet {
+  display: flex;
+  max-width: 50%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.letter {
+  margin: 20px;
+}
